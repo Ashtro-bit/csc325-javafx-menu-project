@@ -30,7 +30,7 @@ public class Main extends Application {
         leftPanel.setPrefWidth(200);
         leftPanel.setPadding(new Insets(20));
         leftPanel.setAlignment(Pos.TOP_CENTER);
-        leftPanel.setStyle("-fx-background-color: #B77B2F;");
+        leftPanel.getStyleClass().add("left-panel");
         root.setLeft(leftPanel);
 
         // CENTER TABLE
@@ -66,7 +66,7 @@ public class Main extends Application {
         VBox rightPanel = new VBox(10);
         rightPanel.setPrefWidth(260);
         rightPanel.setPadding(new Insets(20));
-        rightPanel.setStyle("-fx-background-color: #7CFC00;");
+        rightPanel.getStyleClass().add("right-panel");
 
         TextField id = new TextField(); id.setPromptText("ID");
         TextField first = new TextField(); first.setPromptText("First Name");
@@ -94,7 +94,7 @@ public class Main extends Application {
             imageUrl.setText(sel.getImageUrl());
         });
 
-// Clear button
+        // Clear button
         clear.setOnAction(e -> {
             id.clear();
             first.clear();
@@ -182,6 +182,7 @@ public class Main extends Application {
         root.setRight(rightPanel);
 
         Scene scene = new Scene(root, 1100, 600);
+        scene.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
 
         stage.setTitle("CSC325 - Menu Project");
         stage.setScene(scene);
