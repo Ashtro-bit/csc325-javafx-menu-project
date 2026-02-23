@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import javafx.scene.control.cell.PropertyValueFactory;
 
 public class Main extends Application {
 
@@ -32,16 +33,33 @@ public class Main extends Application {
         leftPanel.setStyle("-fx-background-color: #B77B2F;");
         root.setLeft(leftPanel);
 
-        // Center Table
-        TableView<Object> table = new TableView<>();
-        table.getColumns().addAll(
-                new TableColumn<>("ID"),
-                new TableColumn<>("First Name"),
-                new TableColumn<>("Last Name"),
-                new TableColumn<>("Department"),
-                new TableColumn<>("Major"),
-                new TableColumn<>("Email")
+        // CENTER TABLE
+        TableView<Student> table = new TableView<>();
+
+        TableColumn<Student, String> idCol = new TableColumn<>("ID");
+        idCol.setCellValueFactory(new PropertyValueFactory<>("id"));
+
+        TableColumn<Student, String> firstCol = new TableColumn<>("First Name");
+        firstCol.setCellValueFactory(new PropertyValueFactory<>("firstName"));
+
+        TableColumn<Student, String> lastCol = new TableColumn<>("Last Name");
+        lastCol.setCellValueFactory(new PropertyValueFactory<>("lastName"));
+
+        TableColumn<Student, String> deptCol = new TableColumn<>("Department");
+        deptCol.setCellValueFactory(new PropertyValueFactory<>("department"));
+
+        TableColumn<Student, String> majorCol = new TableColumn<>("Major");
+        majorCol.setCellValueFactory(new PropertyValueFactory<>("major"));
+
+        TableColumn<Student, String> emailCol = new TableColumn<>("Email");
+        emailCol.setCellValueFactory(new PropertyValueFactory<>("email"));
+
+        table.getColumns().setAll(idCol, firstCol, lastCol, deptCol, majorCol, emailCol);
+        table.getItems().addAll(
+                new Student("1", "Leon", "Kennedy", "CS", "Software", "leon@rpd.gov", ""),
+                new Student("2", "Jill", "Valentine", "IT", "Security", "jill@stars.gov", "")
         );
+
         root.setCenter(table);
 
         // Right panel
