@@ -81,6 +81,95 @@ public class Main extends Application {
         Button delete = fullWidth(new Button("Delete"));
         Button edit = fullWidth(new Button("Edit"));
 
+        // When you click a row, load it into the form
+        table.getSelectionModel().selectedItemProperty().addListener((obs, oldSel, sel) -> {
+            if (sel == null) return;
+
+            id.setText(sel.getId());
+            first.setText(sel.getFirstName());
+            last.setText(sel.getLastName());
+            dept.setText(sel.getDepartment());
+            major.setText(sel.getMajor());
+            email.setText(sel.getEmail());
+            imageUrl.setText(sel.getImageUrl());
+        });
+
+// Clear button
+        clear.setOnAction(e -> {
+            id.clear();
+            first.clear();
+            last.clear();
+            dept.clear();
+            major.clear();
+            email.clear();
+            imageUrl.clear();
+            table.getSelectionModel().clearSelection();
+        });
+
+// Add button (minimal validation: require ID + first + last)
+        add.setOnAction(e -> {
+            String idText = id.getText().trim();
+            String firstText = first.getText().trim();
+            String lastText = last.getText().trim();
+
+            if (idText.isEmpty() || firstText.isEmpty() || lastText.isEmpty()) {
+                showAlert("Missing fields", "Please enter at least ID, First Name, and Last Name.");
+                return;
+            }
+
+            Student s = new Student(
+                    idText,
+                    firstText,
+                    lastText,
+                    dept.getText().trim(),
+                    major.getText().trim(),
+                    email.getText().trim(),
+                    imageUrl.getText().trim()
+            );
+
+            table.getItems().add(s);
+            table.getSelectionModel().select(s); // nice UX
+        });
+
+// Delete button
+        delete.setOnAction(e -> {
+            Student sel = table.getSelectionModel().getSelectedItem();
+            if (sel == null) {
+                showAlert("Nothing selected", "Select a row in the table to delete.");
+                return;
+            }
+            table.getItems().remove(sel);
+            table.getSelectionModel().clearSelection();
+        });
+
+// Edit button (updates selected row)
+        edit.setOnAction(e -> {
+            Student sel = table.getSelectionModel().getSelectedItem();
+            if (sel == null) {
+                showAlert("Nothing selected", "Select a row in the table to edit.");
+                return;
+            }
+
+            String idText = id.getText().trim();
+            String firstText = first.getText().trim();
+            String lastText = last.getText().trim();
+
+            if (idText.isEmpty() || firstText.isEmpty() || lastText.isEmpty()) {
+                showAlert("Missing fields", "Please enter at least ID, First Name, and Last Name.");
+                return;
+            }
+
+            sel.setId(idText);
+            sel.setFirstName(firstText);
+            sel.setLastName(lastText);
+            sel.setDepartment(dept.getText().trim());
+            sel.setMajor(major.getText().trim());
+            sel.setEmail(email.getText().trim());
+            sel.setImageUrl(imageUrl.getText().trim());
+
+            table.refresh(); // because we used plain String fields, refresh forces UI update
+        });
+
         Region spacer = new Region();
         VBox.setVgrow(spacer, Priority.ALWAYS);
 
@@ -102,6 +191,13 @@ public class Main extends Application {
     private Button fullWidth(Button b) {
         b.setMaxWidth(Double.MAX_VALUE);
         return b;
+    }
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 
     public static void main(String[] args) {
